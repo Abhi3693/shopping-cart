@@ -1,25 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import OrderBy from './OrderBy';
 
-class Products extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedOrder: '',
-    };
-  }
+function Products(props) {
+  const [selectedOrder, setSelectedOrder] = useState('');
 
   // Selected order of product
-  handleSelectedOrder = (event) => {
-    this.setState({
-      selectedOrder: event.target.value,
-    });
+  const handleSelectedOrder = (event) => {
+    setSelectedOrder(event.target.value);
   };
 
   // Filter Product by size
-  handleDataFilter = (sizes) => {
-    let order = this.state.selectedOrder;
-    let sortedProducts = [...this.props.data];
+  const handleDataFilter = (sizes) => {
+    let order = selectedOrder;
+    let sortedProducts = [...props.data];
 
     if (sizes.length) {
       sortedProducts = sortedProducts.filter((p) => {
@@ -38,35 +31,33 @@ class Products extends React.Component {
     return sortedProducts;
   };
 
-  render() {
-    let data = this.handleDataFilter(this.props.selectedSizes);
-    return (
-      <div className=''>
-        <div className='products-filter flex space-btw'>
-          <p className='found-item'>{`${data.length} product${
-            data.length > 1 ? 's' : ''
-          } found.`}</p>
-          <OrderBy
-            handleSelectedOrder={this.handleSelectedOrder}
-            selectedOrder={this.state.selectedOrder}
-          />
-        </div>
-        <div>
-          <ul className='products-holder flex gap-2 wrap'>
-            {data.map((productInfo) => {
-              return (
-                <Product
-                  key={productInfo.id}
-                  {...productInfo}
-                  handleAddCart={this.props.handleAddCart}
-                />
-              );
-            })}
-          </ul>
-        </div>
+  let data = handleDataFilter(props.selectedSizes);
+  return (
+    <div className=''>
+      <div className='products-filter flex space-btw'>
+        <p className='found-item'>{`${data.length} product${
+          data.length > 1 ? 's' : ''
+        } found.`}</p>
+        <OrderBy
+          handleSelectedOrder={handleSelectedOrder}
+          selectedOrder={selectedOrder}
+        />
       </div>
-    );
-  }
+      <div>
+        <ul className='products-holder flex gap-2 wrap'>
+          {data.map((productInfo) => {
+            return (
+              <Product
+                key={productInfo.id}
+                {...productInfo}
+                handleAddCart={props.handleAddCart}
+              />
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
 }
 
 function Product(props) {
